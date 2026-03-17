@@ -1,0 +1,66 @@
+{% extends "layouts/base.html" %}
+{% load humanize %}
+{% load customfilter %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ims-dashboard.css' %}">
+{% endblock extra_css %}
+
+{% block pageContent %}
+
+<section class="dashboard-container">
+    <div class="app-grid">
+
+        <!-- Dashboard -->
+        <a href="{% url 'home-page' %}" class="app-card">
+            <div class="app-icon icon-home">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="app-title">Dashboard</div>
+        </a>
+
+        <!-- Inventory -->
+        <a href="{% url 'inventory-page' %}" class="app-card">
+            <div class="app-icon icon-inventory">
+                <i class="fas fa-warehouse"></i>
+            </div>
+            <div class="app-title">Inventory</div>
+        </a>
+
+        <!-- Sales -->
+        <a href="{% url 'sales-page' %}" class="app-card">
+            <div class="app-icon icon-sales">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="app-title">Sales Orders</div>
+        </a>
+
+        <!-- Sales Officer -->
+        <a href="#" class="app-card">
+            <div class="app-icon icon-sales-officer">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="app-title">Sales Officers</div>
+        </a>
+
+        <!-- Returns -->
+        <a href="#" class="app-card">
+            <div class="app-icon icon-returns">
+                <i class="fas fa-undo"></i>
+            </div>
+            <div class="app-title">Returns</div>
+        </a>
+
+        <!-- Finance -->
+        <a href="#" class="app-card">
+            <div class="app-icon icon-finance">
+                <i class="fas fa-coins"></i>
+            </div>
+            <div class="app-title">Finance</div>
+        </a>
+
+    </div>
+</section>
+
+{% endblock pageContent %}

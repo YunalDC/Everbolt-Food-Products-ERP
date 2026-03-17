@@ -1,0 +1,194 @@
+{% extends 'layouts/base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ims-inventory.css' %}">
+{% endblock extra_css %}
+
+{% block pageContent %}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 product-list-page">
+    <div class="card product-card product-list-card">
+
+        <div class="product-header d-flex w-100 align-items-center justify-content-between">
+            <h4><i class="fa fa-box me-2"></i>Available Products</h4>
+            <button type="button"
+                    class="btn btn-sm"
+                    id="add_new">
+                <i class="fa fa-plus"></i> Add New
+            </button>
+        </div>
+
+        <div class="card-body">
+            <div class="container-fluid">
+                <table class="table table-bordered" id="product-list">
+                    <colgroup>
+                        <col width="5%">
+                        <col width="10%">
+                        <col width="18%">
+                        <col width="20%">
+                        <col width="22%">
+                        <col width="10%">
+                        <col width="7%">
+                        <col width="8%">
+                    </colgroup>
+
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Image</th>
+                            <th class="text-center">Code</th>
+                            <th class="text-center">Product</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td class="text-center fw-bold align-middle">{{ forloop.counter }}</td>
+
+                            <td class="text-center align-middle">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}"
+                                         alt="{{ product.name }}"
+                                         class="img-thumbnail product-thumb">
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="align-middle">
+                                <strong>{{ product.code }}</strong>
+                            </td>
+
+                            <td class="align-middle">
+                                <strong>{{ product.name }}</strong>
+                                <small class="text-muted d-block text-truncate product-desc-short">
+                                    {{ product.description }}
+                                </small>
+                            </td>
+
+                            <td class="align-middle text-center">
+                                {% if product.category %}
+                                    {{ product.category.name }}
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="align-middle text-end">
+                                {{ product.price|floatformat:2|intcomma }}
+                            </td>
+
+                            <td class="text-center align-middle">
+                                {% if product.status == '1' %}
+                                    <span class="badge-status badge-active">Active</span>
+                                {% else %}
+                                    <span class="badge-status badge-inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="text-center align-middle">
+                                <a class="btn btn-outline-primary btn-sm edit-data"
+                                   href="javascript:void(0)"
+                                   data-id="{{ product.pk }}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+
+                                <button class="btn btn-outline-danger btn-sm delete-data"
+                                        type="button"
+                                        data-id="{{ product.pk }}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+$(function () {
+    $('#add_new').click(function () {
+        uni_modal(
+            '<i class="fa fa-plus"></i> Add Product',
+            '{% url "manage-product" %}',
+            'modal-lg'
+        );
+    });
+
+    $('.edit-data').click(function () {
+        var id = $(this).attr('data-id');
+        uni_modal(
+            '<i class="fa fa-edit"></i> Edit Product',
+            '{% url "manage-product" %}/' + id,
+            'modal-lg'
+        );
+    });
+
+    $('.delete-data').click(function () {
+        var id = $(this).attr('data-id');
+        _conf(
+            "Are you sure to delete this Product permanently?",
+            "delete_product",
+            [id]
+        );
+    });
+
+    $('#product-list').DataTable({
+        columnDefs: [
+            { orderable: false, targets: [1, 7] }
+        ],
+        responsive: true,
+        initComplete: function () {
+            $('#product-list td, #product-list th').addClass('px-2 py-2');
+        },
+        drawCallback: function () {
+            $('#product-list td, #product-list th').addClass('px-2 py-2');
+        }
+    });
+});
+
+function delete_product(id) {
+    start_loader();
+    $('.err-msg').remove();
+
+    var el = $('<div>')
+        .addClass("alert alert-danger err-msg")
+        .hide();
+
+    $.ajax({
+        url: '{% url "delete-product" %}',
+        method: 'POST',
+        headers: { 'X-CSRFToken': "{{ csrf_token }}" },
+        data: { id: id },
+        dataType: 'json',
+        error: function (err) {
+            console.error(err);
+            el.text('An error occurred.');
+            el.show('slow');
+            end_loader();
+        },
+        success: function (resp) {
+            if (resp.status === 'success') {
+                location.reload();
+            } else {
+                el.text(resp.msg || 'An error occurred.');
+                el.show('slow');
+            }
+            end_loader();
+        }
+    });
+}
+</script>
+{% endblock ScriptBlock %}

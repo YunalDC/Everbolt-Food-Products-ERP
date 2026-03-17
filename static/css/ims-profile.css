@@ -1,0 +1,72 @@
+/* =========================================
+   IMS Profile Stylesheet
+   Profile and settings related styles
+   ========================================= */
+
+/* ========== PROFILE PAGE ========== */
+.profile-page {
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+.profile-card {
+  border-radius: var(--ims-radius-lg);
+  border: 1px solid var(--ims-border-soft);
+}
+
+.profile-header {
+  background: linear-gradient(
+    135deg,
+    var(--ims-primary) 0%,
+    var(--ims-primary-light) 100%
+  );
+  color: #fff;
+  padding: 15px 20px;
+}
+
+.profile-details dt {
+  font-weight: 700;
+  color: #7f1d1d;
+  font-size: 14px;
+}
+
+.profile-details dd {
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.profile-footer {
+  background: #fff;
+}
+
+.profile-footer .btn-light {
+  background: #fff;
+  border-color: var(--ims-primary);
+  color: var(--ims-primary);
+}
+
+.profile-footer .btn-light:hover {
+  background: var(--ims-primary-soft);
+  color: var(--ims-primary-dark);
+}
+
+.profile-footer .btn-primary {
+  background: var(--ims-primary);
+  border-color: var(--ims-primary);
+}
+
+.profile-footer .btn-primary:hover {
+  background: var(--ims-primary-light);
+  border-color: var(--ims-primary-light);
+}
+
+/* ========== PROFILE / SETTINGS ========== */
+dt {
+  font-weight: 700;
+  color: #7f1d1d;
+}
+
+dd {
+  font-size: 15px;
+  margin-bottom: 10px;
+}

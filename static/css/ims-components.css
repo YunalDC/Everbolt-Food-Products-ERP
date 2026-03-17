@@ -1,0 +1,259 @@
+/* =========================================
+   IMS Components Stylesheet
+   Shared cards, buttons, forms, tables, badges, alerts
+   ========================================= */
+
+/* ========== COMMON CARDS ========== */
+.card,
+.card.card-default,
+.category-card,
+.product-card,
+.inv-card,
+.stock-card,
+.login-card {
+  border: 1px solid var(--ims-border-soft);
+  border-radius: var(--ims-radius-lg);
+  box-shadow: var(--ims-shadow-md);
+  overflow: hidden;
+}
+
+.stock-card:hover,
+.app-card:hover {
+  transform: translateY(-2px);
+}
+
+.card-header,
+.category-header,
+.product-header,
+.inv-header,
+.card-header-custom {
+  background: linear-gradient(135deg, var(--ims-primary) 0%, var(--ims-primary-dark) 100%);
+  color: var(--ims-white);
+  border-bottom: none;
+  padding: 1rem 1.25rem;
+}
+
+.card-header h4,
+.card-header .card-title,
+.category-header h4,
+.product-header h4,
+.inv-header h4,
+.card-header-custom h5 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.card-footer {
+  background: var(--ims-white);
+}
+
+/* ========== BUTTONS ========== */
+.btn-primary,
+.btn-login,
+.submit-btn,
+.btn-logout,
+#add_new,
+#add_new_category {
+  background: linear-gradient(135deg, var(--ims-primary) 0%, var(--ims-primary-dark) 100%);
+  border-color: var(--ims-primary);
+  color: var(--ims-white);
+}
+
+.btn-primary:hover,
+.btn-login:hover,
+.submit-btn:hover,
+.btn-logout:hover {
+  background: linear-gradient(135deg, var(--ims-primary-dark) 0%, #991b1b 100%);
+  border-color: var(--ims-primary-dark);
+  color: var(--ims-white);
+  box-shadow: 0 8px 20px rgba(220,38,38,.25);
+}
+
+#add_new,
+#add_new_category {
+  border: 2px solid var(--ims-white) !important;
+  background: var(--ims-white) !important;
+  color: var(--ims-primary-dark) !important;
+  border-radius: var(--ims-radius-sm);
+  transition: .25s ease;
+}
+
+#add_new:hover,
+#add_new_category:hover {
+  background: var(--ims-primary-soft) !important;
+  color: var(--ims-primary-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(220,38,38,.25);
+}
+
+.btn-light {
+  background: var(--ims-white);
+  border-color: var(--ims-primary);
+  color: var(--ims-primary);
+}
+
+.btn-light:hover {
+  background: var(--ims-primary-soft);
+  color: var(--ims-primary-dark);
+}
+
+.btn-outline-danger.btn-sm,
+.edit-data,
+.delete-data,
+.edit-category,
+.delete-category,
+.view-btn {
+  transition: .25s ease;
+  border-radius: 6px !important;
+}
+
+.btn-outline-danger.btn-sm {
+  border-color: var(--ims-primary-light);
+  color: var(--ims-primary-dark);
+}
+
+.btn-outline-danger.btn-sm:hover,
+.delete-data:hover,
+.delete-category:hover,
+.view-btn:hover {
+  background: var(--ims-primary-soft) !important;
+  border-color: var(--ims-primary-dark) !important;
+  color: var(--ims-primary-dark) !important;
+  transform: translateY(-2px);
+}
+
+.edit-data:hover,
+.edit-category:hover {
+  background: var(--ims-primary-soft);
+  border-color: var(--ims-primary) !important;
+  color: var(--ims-primary-dark) !important;
+  transform: translateY(-2px);
+}
+
+/* ========== FORMS ========== */
+.form-control,
+.form-select,
+textarea {
+  border: 1px solid var(--ims-border);
+  border-radius: var(--ims-radius-sm);
+  padding: .75rem 1rem;
+  transition: all .25s ease;
+  box-shadow: none;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+  border-color: var(--ims-primary);
+  box-shadow: 0 0 0 3px rgba(220,38,38,.12);
+  outline: none;
+}
+
+.form-label,
+.control-label,
+label {
+  font-weight: 600;
+  color: #7f1d1d;
+}
+
+.with-icon {
+  padding-left: 46px;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ims-text-muted);
+  z-index: 10;
+}
+
+.errorlist,
+.err-msg,
+.alert-danger {
+  color: var(--ims-primary);
+}
+
+.alert-danger {
+  background-color: #fee;
+  border-left: 4px solid var(--ims-primary);
+  border-radius: var(--ims-radius-md);
+}
+
+/* ========== TABLES ========== */
+.table thead tr,
+#category-list thead tr,
+#product-list thead tr,
+#invoice-list thead tr,
+.table-custom thead {
+  background: linear-gradient(135deg, var(--ims-primary-soft) 0%, var(--ims-primary-soft-2) 100%);
+  color: var(--ims-primary-dark);
+  font-weight: 700;
+}
+
+.table thead th,
+#category-list thead th,
+#product-list thead th,
+#invoice-list thead th {
+  border-bottom: 2px solid var(--ims-primary) !important;
+  font-size: .9rem;
+}
+
+.table tbody tr,
+#category-list tbody tr,
+#product-list tbody tr,
+#invoice-list tbody tr {
+  transition: .2s ease;
+}
+
+.table tbody tr:hover,
+#category-list tbody tr:hover,
+#product-list tbody tr:hover,
+#invoice-list tbody tr:hover {
+  background: var(--ims-bg-soft);
+}
+
+/* ========== BADGES / PILLS ========== */
+.badge-status,
+.stock-box,
+.price-pill,
+.stats-badge {
+  display: inline-block;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.badge-status {
+  font-size: .85rem;
+  padding: .35rem .75rem;
+}
+
+.badge-active {
+  background: var(--ims-primary);
+  color: var(--ims-white);
+}
+
+.badge-inactive {
+  background: #6b7280;
+  color: var(--ims-white);
+}
+
+.stock-box,
+.price-pill {
+  padding: .35rem .8rem;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  font-size: .9rem;
+}
+
+.stats-badge {
+  background: linear-gradient(135deg, var(--ims-primary-soft) 0%, var(--ims-primary-soft-2) 100%);
+  color: var(--ims-primary);
+  padding: .4rem 1rem;
+  border: 1px solid #fca5a5;
+}

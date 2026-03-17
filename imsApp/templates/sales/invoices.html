@@ -1,0 +1,132 @@
+{% extends 'layouts/base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ims-sales.css' %}">
+{% endblock extra_css %}
+
+{% block pageContent %}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 invoices-page">
+    <div class="card card-default invoice-list-card">
+        <div class="card-header invoice-list-header">
+            <div class="d-flex w-100 align-items-center justify-content-between">
+                <h4 class="card-title fw-bold mb-0">Invoices</h4>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="container-fluid">
+                <table class="table table-bordered" id="invoice-list">
+                    <colgroup>
+                        <col width="5%">
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="10%">
+                        <col width="10%">
+                        <col width="15%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Date/Time</th>
+                            <th class="text-center">Transaction Code</th>
+                            <th class="text-center">Customer</th>
+                            <th class="text-center">Total Item</th>
+                            <th class="text-center">Total Amount</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for invoice in invoices %}
+                        <tr>
+                            <td class="align-middle text-center">{{ forloop.counter }}</td>
+                            <td class="align-middle">{{ invoice.date_created|date:"Y-m-d h:i A" }}</td>
+                            <td class="align-middle">{{ invoice.transaction }}</td>
+                            <td class="align-middle">{{ invoice.customer }}</td>
+                            <td class="align-middle text-end">{{ invoice.item_count|floatformat:0|intcomma }}</td>
+                            <td class="align-middle text-end">{{ invoice.total|floatformat:2|intcomma }}</td>
+                            <td class="align-middle text-center">
+                                <button class="btn btn-outline-danger btn-sm delete-data"
+                                        type="button"
+                                        data-id="{{ invoice.pk }}"
+                                        title="Delete">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+    $(function() {
+        $('.delete-data').click(function() {
+            _conf(
+                "Are you sure to delete this invoice permanently?",
+                "delete_invoice",
+                [$(this).attr('data-id')]
+            );
+        });
+
+        $('#invoice-list').DataTable({
+            columnDefs: [
+                {
+                    orderable: false,
+                    targets: -1
+                }
+            ],
+            responsive: true,
+            initComplete: function() {
+                $('#invoice-list td, #invoice-list th').addClass('px-2 py-1');
+            },
+            drawCallback: function() {
+                $('#invoice-list td, #invoice-list th').addClass('px-2 py-1');
+            }
+        });
+    });
+
+    function delete_invoice(id) {
+        start_loader();
+        $('.err-msg').remove();
+
+        const el = $('<div>')
+            .addClass("alert alert-danger err-msg")
+            .hide();
+
+        $.ajax({
+            url: '{% url "delete-invoice" %}',
+            headers: {
+                'X-CSRFToken': "{{ csrf_token }}"
+            },
+            method: 'POST',
+            data: { id: id },
+            dataType: 'json',
+            error: function(err) {
+                console.log(err);
+                el.text('An error occurred.');
+                $('.invoice-list-card .container-fluid').prepend(el);
+                el.show('slow');
+                end_loader();
+            },
+            success: function(resp) {
+                if (resp.status === 'success') {
+                    location.reload();
+                } else {
+                    el.text(resp.msg || 'An error occurred.');
+                    $('.invoice-list-card .container-fluid').prepend(el);
+                    el.show('slow');
+                }
+                end_loader();
+            }
+        });
+    }
+</script>
+{% endblock ScriptBlock %}

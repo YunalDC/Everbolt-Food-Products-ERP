@@ -1,0 +1,57 @@
+{% extends 'layouts/base.html' %}
+{% block pageContent %}
+
+<div class="profile-page container">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-10 col-sm-12 col-xs-12">
+
+            <div class="card profile-card shadow">
+                
+                <div class="card-header profile-header">
+                    <div class="h5 card-title fw-bold">My Profile</div>
+                </div>
+
+                <div class="card-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-8">
+
+                                <dl class="profile-details">
+                                    <dt>Fullname</dt>
+                                    <dd class="ps-4">{{ user.first_name }} {{ user.last_name }}</dd>
+
+                                    <dt>Email</dt>
+                                    <dd class="ps-4">{{ user.email }}</dd>
+
+                                    <dt>Username</dt>
+                                    <dd class="ps-4">{{ user.username }}</dd>
+                                </dl>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer profile-footer">
+                    <div class="d-flex w-100 justify-content-end">
+
+                        <a href="{% url 'update-password' %}"
+                           class="btn btn-light btn-sm me-2">
+                            Update Password
+                        </a>
+
+                        <a href="{% url 'update-profile' %}"
+                           class="btn btn-primary btn-sm">
+                            Update Profile
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock pageContent %}

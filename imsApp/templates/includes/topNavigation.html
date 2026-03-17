@@ -1,0 +1,90 @@
+{% load static %}
+
+<header>
+    <nav class="main-navbar">
+        <div class="navbar-container">
+            <div class="navbar-content">
+
+                <!-- LOGO -->
+                <a href="{% url 'home-page' %}" class="navbar-brand-section">
+                    <img src="{{ MEDIA_URL }}/default/logo.jpg"
+                         alt="Everbolt Food Products"
+                         class="navbar-logo">
+                </a>
+
+                <!-- USER ACTIONS -->
+                <div class="navbar-actions">
+                    {% if user.id %}
+                    <a href="{% url 'profile' %}" class="user-profile">
+                        <img src="{{ MEDIA_URL }}/default/default-avatar.png"
+                             class="user-avatar">
+
+                        <div class="user-info">
+                            <span class="user-greeting">Welcome</span>
+                            <span class="user-name">{{ user.first_name }} {{ user.last_name }}</span>
+                        </div>
+                    </a>
+
+                    <a href="{% url 'logout' %}" class="btn btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- MOBILE TOGGLE -->
+                <button class="mobile-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+            </div>
+        </div>
+
+        <!-- MOBILE MENU -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-content">
+
+                {% if user.id %}
+                <ul class="mobile-nav-list">
+
+                    <li><a href="{% url 'home-page' %}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{% url 'stock-page' %}" class="nav-link"><i class="fas fa-file-invoice"></i> Stock</a></li>
+                    <li><a href="{% url 'category-page' %}" class="nav-link"><i class="fas fa-th-large"></i> Categories</a></li>
+                    <li><a href="{% url 'product-page' %}" class="nav-link"><i class="fas fa-box"></i> Products</a></li>
+                    <li><a href="{% url 'inventory-page' %}" class="nav-link"><i class="fas fa-warehouse"></i> Inventory</a></li>
+                    <li><a href="{% url 'sales-page' %}" class="nav-link"><i class="fas fa-shopping-cart"></i> Sales</a></li>
+                    <li><a href="{% url 'invoice-page' %}" class="nav-link"><i class="fas fa-file-invoice"></i> Invoices</a></li>
+
+                </ul>
+
+                <div class="mobile-user-section">
+                    <div class="mobile-user-profile">
+                        <img src="{{ MEDIA_URL }}/default/default-avatar.png" class="user-avatar">
+                        <div class="user-info">
+                            <span class="user-greeting">Welcome</span>
+                            <span class="user-name">{{ user.first_name }} {{ user.last_name }}</span>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'profile' %}" class="nav-link mb-2">
+                        <i class="fas fa-user-circle"></i> My Profile
+                    </a>
+
+                    <a href="{% url 'logout' %}" class="btn btn-logout w-100">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-login w-100">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                {% endif %}
+
+            </div>
+        </div>
+    </nav>
+</header>

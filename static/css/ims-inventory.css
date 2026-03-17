@@ -1,0 +1,293 @@
+/* =========================================
+   IMS Inventory Stylesheet
+   Inventory, stock, categories, products
+   ========================================= */
+
+/* ========== ERP INVENTORY DASHBOARD ========== */
+.erp-module-page {
+  padding: 20px;
+}
+
+.erp-module-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.erp-module-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.erp-module-title {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.erp-module-settings {
+  color: #374151;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.erp-module-search-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 280px;
+}
+
+.erp-search-box {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--ims-border);
+  border-radius: var(--ims-radius-sm);
+  overflow: hidden;
+  min-height: 42px;
+}
+
+.erp-search-box i.fa-search {
+  color: #6b7280;
+  padding-left: 12px;
+  padding-right: 8px;
+}
+
+.erp-search-box input {
+  border: none;
+  outline: none;
+  flex: 1;
+  padding: 10px 8px;
+  font-size: 15px;
+  background: transparent;
+}
+
+.erp-search-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 100%;
+  border-left: 1px solid var(--ims-border);
+  color: #475569;
+}
+
+.erp-module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+  gap: 16px;
+}
+
+.erp-module-card {
+  position: relative;
+  display: block;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  min-height: 140px;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,.05);
+}
+
+.erp-module-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(0,0,0,.10);
+  color: inherit;
+}
+
+.erp-card-accent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--ims-primary);
+}
+
+.erp-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 18px 8px 22px;
+}
+
+.erp-card-head h5 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.erp-card-menu {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.erp-card-body {
+  padding: 8px 18px 18px 22px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.erp-card-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fef2f2;
+  color: var(--ims-primary-dark);
+  font-weight: 700;
+  font-size: 0.88rem;
+  border-radius: 999px;
+  padding: 8px 12px;
+  min-width: 120px;
+  white-space: nowrap;
+  border: 1px solid #fecaca;
+}
+
+.erp-card-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #475569;
+  font-size: 0.93rem;
+  line-height: 1.3;
+}
+
+.card-receipts .erp-card-accent { background: #ef4444; }
+.card-transfers .erp-card-accent { background: #dc2626; }
+.card-delivery .erp-card-accent { background: #a855f7; }
+.card-returns .erp-card-accent { background: #f59e0b; }
+.card-manufacturing .erp-card-accent { background: #60a5fa; }
+.card-samples .erp-card-accent { background: #e11d48; }
+.card-warranty .erp-card-accent { background: #fb7185; }
+.card-gatepass .erp-card-accent { background: #8b5cf6; }
+
+@media (max-width: 768px) {
+  .erp-module-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .erp-card-body {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .erp-card-pill {
+    min-width: auto;
+  }
+
+  .erp-module-search-wrap {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .erp-search-box {
+    max-width: 100%;
+  }
+}
+
+/* ========== STOCK SCREEN ========== */
+.toggle-btn {
+  border: 2px solid var(--ims-border);
+  border-radius: var(--ims-radius-sm);
+  padding: .75rem 1.5rem;
+  background: #fff;
+  color: #64748b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .3s ease;
+}
+
+.toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+}
+
+.toggle-btn.stock-in {
+  border-color: var(--ims-success);
+  color: var(--ims-success);
+}
+
+.toggle-btn.stock-in.active {
+  background: linear-gradient(135deg, var(--ims-success) 0%, var(--ims-success-dark) 100%);
+  color: #fff;
+  border-color: var(--ims-success);
+}
+
+.toggle-btn.stock-out,
+.toggle-btn.unit-btn {
+  border-color: var(--ims-primary);
+  color: var(--ims-primary);
+}
+
+.toggle-btn.stock-out.active,
+.toggle-btn.unit-btn.active {
+  background: linear-gradient(135deg, var(--ims-primary) 0%, var(--ims-primary-dark) 100%);
+  color: #fff;
+  border-color: var(--ims-primary);
+}
+
+.reason-indicator.out {
+  background: rgba(220,38,38,.1);
+  color: var(--ims-danger);
+}
+
+/* ========== CATEGORY MODAL ========== */
+.category-modal-wrapper {
+  padding-top: .25rem;
+  padding-bottom: .5rem;
+}
+
+.category-modal-wrapper .category-card {
+  padding: 1.25rem 1.5rem;
+  background: #fff;
+}
+
+.category-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ims-primary-dark);
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+.category-title i {
+  color: var(--ims-primary-light);
+}
+
+/* ========== PRODUCT MODAL ========== */
+.product-modal-wrapper {
+  padding-top: .25rem;
+  padding-bottom: .5rem;
+}
+
+.product-modal-wrapper .product-card {
+  background: #fff;
+  padding: 0;
+}
+
+.product-image-preview {
+  padding-top: .25rem;
+}
+
+.product-preview-img {
+  max-width: 120px;
+  border: 1px solid #ddd;
+  padding: 3px;
+  border-radius: 6px;
+  background: #fff;
+}

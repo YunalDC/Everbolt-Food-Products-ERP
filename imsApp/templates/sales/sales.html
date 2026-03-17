@@ -1,0 +1,150 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load humanize %}
+{% load customfilter %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ims-sales.css' %}">
+{% endblock extra_css %}
+
+{% block pageContent %}
+
+<!-- ───── Sales Form Container ───── -->
+<div class="form-container">
+    <div class="container pt-4">
+        <div class="card card-default sales-card">
+
+            <div class="card-header sales-header">
+                <div class="w-100 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bolder mb-0">Sales Transaction</h5>
+                    <span class="badge sales-badge">New Transaction</span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <form id="sale-form">
+
+                    <!-- CUSTOMER -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label">Customer Name *</label>
+                            <input type="text" id="customer" class="form-control" required>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <label class="form-label">Sales Officer</label>
+                            <input type="text" id="sales_officer" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- DETAILS -->
+                    <div class="row mt-2">
+                        <div class="col-lg-6">
+                            <label class="form-label">Customer Address</label>
+                            <textarea id="customer_address" rows="3" class="form-control"></textarea>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <label class="form-label">Customer Phone</label>
+                            <input type="text" id="customer_phone" class="form-control">
+                        </div>
+
+                        <div class="col-lg-3">
+                            <label class="form-label">Delivery To</label>
+                            <input type="text" id="delivery_address" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- TERMS -->
+                    <div class="row mt-2">
+                        <div class="col-lg-4">
+                            <label class="form-label">Customer PO</label>
+                            <input type="text" id="customer_po" class="form-control">
+                        </div>
+
+                        <div class="col-lg-4">
+                            <label class="form-label">Terms</label>
+                            <select id="terms" class="form-select">
+                                <option value="">-- Select --</option>
+                                <option>Cash</option>
+                                <option>Credit 7 Days</option>
+                                <option>Credit 14 Days</option>
+                                <option>Credit 30 Days</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- ITEMS -->
+                    <h5><i class="fas fa-shopping-cart"></i> Items</h5>
+
+                    <div class="row align-items-end mb-3">
+                        <div class="col-lg-5">
+                            <label class="form-label">Select Product *</label>
+                            <select id="pid" class="form-control">
+                                <option disabled selected>-- Select Product --</option>
+                                {% for product in products %}
+                                <option value="{{ product.id }}"
+                                    data-code="{{ product.code }}"
+                                    data-name="{{ product.name }}"
+                                    data-price="{{ product.price }}">
+                                    {{ product.code }} - {{ product.name }} - Rs. {{ product.price|floatformat:2 }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <label class="form-label">Qty</label>
+                            <input type="number" id="quantity" value="1" min="1" class="form-control">
+                        </div>
+
+                        <div class="col-lg-2">
+                            <button class="btn btn-primary w-100" id="add_to_list" type="button">
+                                <i class="fa fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="product-tbl">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>QTY</th>
+                                    <th>Code</th>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="5" class="text-end">Grand Total</th>
+                                    <th class="text-end" id="total">0.00</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="card-footer text-end">
+                <button class="btn btn-secondary" id="clear-form">Clear</button>
+                <button class="btn btn-success" id="generate-invoice">
+                    Generate Invoice
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- KEEP YOUR INVOICE CONTAINER EXACTLY SAME (NO CHANGE) -->
+<div class="invoice-container">
+    <!-- (UNCHANGED – your full invoice HTML stays exactly as it is) -->
+</div>
+
+{% endblock %}

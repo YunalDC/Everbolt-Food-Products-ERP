@@ -1,0 +1,124 @@
+/* =========================================
+   IMS Sales Stylesheet
+   Sales and invoice related styles
+   ========================================= */
+
+/* Add sales-page-specific styles here as your module grows */
+
+/* Example placeholders for future module-specific styling */
+
+.sales-page {
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+
+.invoices-page {
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+
+/* ========== INVOICES PAGE ========== */
+.invoices-page {
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+
+.invoice-list-card {
+  border-radius: var(--ims-radius-lg);
+}
+
+.invoice-list-header {
+  background: linear-gradient(135deg, var(--ims-primary) 0%, var(--ims-primary-light) 100%);
+  color: #fff;
+  border-bottom: none;
+}
+
+#invoice-list thead tr {
+  background: #ffe5e5;
+  color: #7f1d1d;
+}
+
+#invoice-list thead th {
+  border-bottom: 1px solid #fecaca;
+}
+
+#invoice-list td,
+#invoice-list th {
+  vertical-align: middle;
+}
+
+/* ===== SALES FORM THEME ===== */
+
+:root {
+  --ims-primary: #b80000;
+  --ims-primary-light: #ff4b4b;
+  --ims-primary-dark: #7f0000;
+  --ims-border-soft: #f5c2c2;
+  --ims-bg-soft: #fff5f5;
+}
+
+/* FORM CONTAINER */
+.form-container {
+  background: var(--ims-bg-soft);
+  padding: 20px 0;
+}
+
+/* CARD */
+.sales-card {
+  border: 1px solid var(--ims-border-soft);
+  border-radius: 0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+.sales-header {
+  background: linear-gradient(135deg, var(--ims-primary), var(--ims-primary-light));
+  color: #fff;
+}
+
+/* BADGE */
+.sales-badge {
+  background: #fff;
+  color: var(--ims-primary-dark);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-weight: 600;
+}
+
+/* TABLE HEADER */
+#product-tbl thead {
+  background: #ffe5e5;
+  color: #7f1d1d;
+}
+
+/* INPUTS */
+.form-label {
+  font-weight: 600;
+  color: #7f1d1d;
+}
+
+.form-control,
+.form-select {
+  border-radius: 0;
+}
+
+/* BUTTONS */
+.btn-primary {
+  background: linear-gradient(135deg, var(--ims-primary), var(--ims-primary-light));
+  border: none;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--ims-primary), var(--ims-primary-light));
+  border: none;
+}
+
+.btn-secondary {
+  border: 1px solid var(--ims-primary-light);
+  color: var(--ims-primary-dark);
+}
+
+/* INVOICE VIEW */
+.invoice-container {
+  display: none;
+}

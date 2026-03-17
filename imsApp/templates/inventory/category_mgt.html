@@ -1,0 +1,156 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ims-inventory.css' %}">
+{% endblock extra_css %}
+
+{% block pageContent %}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card category-card">
+
+        <div class="category-header d-flex w-100 align-items-center justify-content-between">
+            <h4><i class="fa fa-folder-open me-2"></i>Available Categories</h4>
+            <button type="button"
+                    class="btn btn-sm"
+                    id="add_new_category">
+                <i class="fa fa-plus"></i> Add New
+            </button>
+        </div>
+
+        <div class="card-body">
+            <div class="container-fluid">
+                <table class="table table-bordered" id="category-list">
+                    <colgroup>
+                        <col width="5%">
+                        <col width="20%">
+                        <col width="45%">
+                        <col width="10%">
+                        <col width="20%">
+                    </colgroup>
+
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Date/Time</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for category in categories %}
+                        <tr>
+                            <td class="text-center fw-bold">{{ forloop.counter }}</td>
+
+                            <td>{{ category.date_created|date:"Y-m-d h:i A" }}</td>
+
+                            <td>
+                                <strong>{{ category.name }}</strong><br>
+                                <small class="text-muted d-block text-truncate">
+                                    {{ category.description }}
+                                </small>
+                            </td>
+
+                            <td class="text-center">
+                                {% if category.status == '1' %}
+                                    <span class="badge-status badge-active">Active</span>
+                                {% else %}
+                                    <span class="badge-status badge-inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="text-center">
+                                <a class="btn btn-outline-primary btn-sm edit-category"
+                                   href="javascript:void(0)"
+                                   data-id="{{ category.pk }}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+
+                                <button class="btn btn-outline-danger btn-sm delete-category"
+                                        data-id="{{ category.pk }}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+$(function () {
+    $('#add_new_category').click(function () {
+        uni_modal(
+            '<i class="fa fa-plus"></i> Add Category',
+            '{% url "manage-category" %}',
+            'modal-md'
+        );
+    });
+
+    $('.edit-category').click(function () {
+        var id = $(this).attr('data-id');
+        uni_modal(
+            '<i class="fa fa-edit"></i> Edit Category',
+            '{% url "manage-category" %}/' + id,
+            'modal-md'
+        );
+    });
+
+    $('.delete-category').click(function () {
+        var id = $(this).attr('data-id');
+        _conf(
+            "Are you sure to delete this Category permanently?",
+            "delete_category",
+            [id]
+        );
+    });
+
+    $('#category-list').DataTable({
+        columnDefs: [
+            { orderable: false, targets: -1 }
+        ],
+        responsive: true
+    });
+});
+
+function delete_category(id) {
+    start_loader();
+    $('.err-msg').remove();
+
+    var el = $('<div>')
+        .addClass("alert alert-danger err-msg")
+        .hide();
+
+    $.ajax({
+        url: '{% url "delete-category" %}',
+        method: 'POST',
+        headers: { 'X-CSRFToken': "{{ csrf_token }}" },
+        data: { id: id },
+        dataType: 'json',
+        error: function (err) {
+            console.error(err);
+            el.text('An error occurred.');
+            el.show('slow');
+            end_loader();
+        },
+        success: function (resp) {
+            if (resp.status === 'success') {
+                location.reload();
+            } else {
+                el.text(resp.msg || 'An error occurred.');
+                el.show('slow');
+            }
+            end_loader();
+        }
+    });
+}
+</script>
+{% endblock ScriptBlock %}

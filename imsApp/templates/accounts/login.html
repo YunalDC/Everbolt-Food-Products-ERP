@@ -1,0 +1,152 @@
+{% extends 'layouts/base_fullscreen.html' %}
+{% load static %}
+
+{% block pageContent %}
+<div class="login-page">
+    <div class="login-container">
+        <div class="card login-card">
+            <div class="login-header">
+                <div class="logo-container">
+                    <img src="{{ MEDIA_URL }}/default/logo.jpg" alt="Everbolt Food Products">
+                </div>
+                <div class="welcome-text">
+                    <h4>Welcome Back</h4>
+                    <p>Sign in to your inventory management system</p>
+                </div>
+            </div>
+
+            <div class="login-body">
+                <form id="login-user">
+                    {% csrf_token %}
+
+                    <div class="form-group mb-3">
+                        <label for="username" class="control-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input
+                                type="text"
+                                class="form-control with-icon"
+                                name="username"
+                                id="username"
+                                placeholder="Enter your username"
+                                required="required"
+                                autocomplete="username"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="password" class="control-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input
+                                type="password"
+                                class="form-control with-icon"
+                                name="password"
+                                id="password"
+                                placeholder="Enter your password"
+                                required="required"
+                                autocomplete="current-password"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="remember-me">
+                                <input type="checkbox" id="remember" name="remember">
+                                <label for="remember">Remember me</label>
+                            </div>
+                            <a href="#" class="forgot-password">Forgot Password?</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-login">
+                            Sign In
+                        </button>
+                    </div>
+
+                    <div class="form-footer">
+                        <p>© {% now 'Y' %} Everbolt Food Products. All rights reserved.</p>
+                    </div>
+
+                    {% comment %}
+                    <div class="divider">
+                        <span>OR</span>
+                    </div>
+
+                    <div class="signup-link">
+                        Don't have an account? <a href="{% url 'register-user' %}">Sign up here</a>
+                    </div>
+                    {% endcomment %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+    $(function() {
+        $('#login-user').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this);
+            $('.err-msg').remove();
+
+            var el = $('<div>');
+            el.addClass("alert alert-danger err-msg");
+            el.hide();
+
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+
+            start_loader();
+
+            $.ajax({
+                headers: {
+                    "X-CSRFToken": '{{csrf_token}}'
+                },
+                url: "{% url 'login-user' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err);
+                    el.html('<i class="fas fa-exclamation-circle me-2"></i>An error occurred. Please try again.');
+                    _this.prepend(el);
+                    el.show('slow');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        location.href = "{% url 'home-page' %}";
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.html('<i class="fas fa-exclamation-circle me-2"></i>' + resp.msg);
+                        _this.prepend(el);
+                        el.show('slow');
+                        $("html, body").animate({ scrollTop: 0 }, 'slow');
+                    } else {
+                        el.html('<i class="fas fa-exclamation-circle me-2"></i>An error occurred. Please try again.');
+                        _this.prepend(el);
+                        el.show('slow');
+                        console.error(resp);
+                    }
+                    end_loader();
+                }
+            });
+        });
+    });
+</script>
+{% endblock ScriptBlock %}

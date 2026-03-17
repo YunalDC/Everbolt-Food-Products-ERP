@@ -1,0 +1,101 @@
+{% extends 'layouts/base.html' %}
+{% load humanize %}
+
+{% block pageContent %}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 inventory-list-page">
+    <div class="card inv-card inventory-list-card">
+
+        <div class="card-body">
+            <div class="container-fluid">
+                <table class="table table-bordered" id="inventory-list-table">
+                    <colgroup>
+                        <col width="5%">
+                        <col width="18%">
+                        <col width="32%">
+                        <col width="15%">
+                        <col width="15%">
+                        <col width="15%">
+                    </colgroup>
+
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Product Code</th>
+                            <th class="text-center">Product Name</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Available Stock</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td class="text-center align-middle fw-bold">{{ forloop.counter }}</td>
+
+                            <td class="align-middle text-center">
+                                {{ product.code }}
+                            </td>
+
+                            <td class="align-middle">
+                                <strong>{{ product.name }}</strong>
+                                {% if product.description %}
+                                <small class="text-muted d-block text-truncate">
+                                    {{ product.description }}
+                                </small>
+                                {% endif %}
+                            </td>
+
+                            <td class="align-middle text-center">
+                                {% if product.category %}
+                                    {{ product.category.name }}
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="align-middle text-center">
+                                <span class="stock-box">
+                                    {{ product.count_inventory|floatformat:0|intcomma }}
+                                </span>
+                            </td>
+
+                            <td class="align-middle text-center">
+                                <a class="btn btn-outline-primary btn-sm view-btn"
+                                   href="{% url 'inventory-history-page' product.pk %}">
+                                    <i class="fa fa-eye me-1"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+    $(function () {
+        $('#inventory-list-table').DataTable({
+            columnDefs: [
+                {
+                    orderable: false,
+                    targets: 5
+                }
+            ],
+            responsive: true,
+            initComplete: function () {
+                $('#inventory-list-table td, #inventory-list-table th').addClass('px-2 py-2');
+            },
+            drawCallback: function () {
+                $('#inventory-list-table td, #inventory-list-table th').addClass('px-2 py-2');
+            }
+        });
+    });
+</script>
+{% endblock ScriptBlock %}

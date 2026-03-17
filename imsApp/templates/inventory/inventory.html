@@ -1,0 +1,175 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ims-inventory.css' %}">
+{% endblock extra_css %}
+
+{% block pageContent %}
+<div class="erp-module-page">
+
+    <!-- ===== TOP BAR ===== -->
+    <div class="erp-module-topbar">
+        <div class="erp-module-title-wrap">
+            <h3 class="erp-module-title">Inventory Overview</h3>
+            <span class="erp-module-settings">
+                <i class="fa fa-cog"></i>
+            </span>
+        </div>
+
+        <div class="erp-module-search-wrap">
+            <div class="erp-search-box">
+                <i class="fa fa-search"></i>
+                <input type="text" id="erpModuleSearch" placeholder="Search operations...">
+                <span class="erp-search-dropdown">
+                    <i class="fa fa-caret-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODULE GRID ===== -->
+    <div class="erp-module-grid" id="erpModuleGrid">
+
+        <a href="{% url 'stock-page' %}" class="erp-module-card card-receipts">
+            <div class="erp-card-accent"></div>
+            <div class="erp-card-head">
+                <h5>Receipts</h5>
+                <span class="erp-card-menu"><i class="fa fa-ellipsis-v"></i></span>
+            </div>
+            <div class="erp-card-body">
+                <div class="erp-card-pill">Manage Stock In</div>
+                <div class="erp-card-links">
+                    <span>GRN / Production</span>
+                    <span>Returns</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="{% url 'inventory-list' %}" class="erp-module-card card-transfers">
+            <div class="erp-card-accent"></div>
+            <div class="erp-card-head">
+                <h5>Inventory Levels</h5>
+                <span class="erp-card-menu"><i class="fa fa-ellipsis-v"></i></span>
+            </div>
+            <div class="erp-card-body">
+                <div class="erp-card-pill">View Stock</div>
+                <div class="erp-card-links">
+                    <span>Available Quantity</span>
+                    <span>Product Balances</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- ⚠ FIXED: Safe handling if no products -->
+        {% if products %}
+        <a href="{% url 'inventory-history-page' products.0.pk %}" class="erp-module-card card-delivery">
+        {% else %}
+        <a href="#" class="erp-module-card card-delivery">
+        {% endif %}
+            <div class="erp-card-accent"></div>
+            <div class="erp-card-head">
+                <h5>Stock History</h5>
+                <span class="erp-card-menu"><i class="fa fa-ellipsis-v"></i></span>
+            </div>
+            <div class="erp-card-body">
+                <div class="erp-card-pill">Track Movements</div>
+                <div class="erp-card-links">
+                    <span>In / Out Records</span>
+                    <span>Timeline View</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="{% url 'category-page' %}" class="erp-module-card card-returns">
+            <div class="erp-card-accent"></div>
+            <div class="erp-card-head">
+                <h5>Categories</h5>
+                <span class="erp-card-menu"><i class="fa fa-ellipsis-v"></i></span>
+            </div>
+            <div class="erp-card-body">
+                <div class="erp-card-pill">Manage Categories</div>
+                <div class="erp-card-links">
+                    <span>Active / Inactive</span>
+                    <span>Classification</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="{% url 'product-page' %}" class="erp-module-card card-manufacturing">
+            <div class="erp-card-accent"></div>
+            <div class="erp-card-head">
+                <h5>Products</h5>
+                <span class="erp-card-menu"><i class="fa fa-ellipsis-v"></i></span>
+            </div>
+            <div class="erp-card-body">
+                <div class="erp-card-pill">Manage Products</div>
+                <div class="erp-card-links">
+                    <span>Codes</span>
+                    <span>Descriptions / Prices</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="{% url 'stock-page' %}" class="erp-module-card card-samples">
+            <div class="erp-card-accent"></div>
+            <div class="erp-card-head">
+                <h5>Stock Out</h5>
+                <span class="erp-card-menu"><i class="fa fa-ellipsis-v"></i></span>
+            </div>
+            <div class="erp-card-body">
+                <div class="erp-card-pill">Dispatch Items</div>
+                <div class="erp-card-links">
+                    <span>Sales Dispatch</span>
+                    <span>Wastage / Samples</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="{% url 'stock-page' %}" class="erp-module-card card-warranty">
+            <div class="erp-card-accent"></div>
+            <div class="erp-card-head">
+                <h5>Adjustments</h5>
+                <span class="erp-card-menu"><i class="fa fa-ellipsis-v"></i></span>
+            </div>
+            <div class="erp-card-body">
+                <div class="erp-card-pill">Stock Adjustments</div>
+                <div class="erp-card-links">
+                    <span>Corrections</span>
+                    <span>Reconciliation</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="{% url 'inventory-page' %}" class="erp-module-card card-gatepass">
+            <div class="erp-card-accent"></div>
+            <div class="erp-card-head">
+                <h5>Reports</h5>
+                <span class="erp-card-menu"><i class="fa fa-ellipsis-v"></i></span>
+            </div>
+            <div class="erp-card-body">
+                <div class="erp-card-pill">Inventory Reports</div>
+                <div class="erp-card-links">
+                    <span>Summaries</span>
+                    <span>Audit Trails</span>
+                </div>
+            </div>
+        </a>
+
+    </div>
+</div>
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+    $(function () {
+        $('#erpModuleSearch').on('keyup', function () {
+            const value = $(this).val().toLowerCase();
+
+            $('#erpModuleGrid .erp-module-card').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>
+{% endblock ScriptBlock %}

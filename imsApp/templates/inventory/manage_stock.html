@@ -1,0 +1,332 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ims-inventory.css' %}">
+{% endblock extra_css %}
+
+{% block pageContent %}
+<div class="row stock-update-page">
+  <div class="col-lg-6 col-md-7 col-sm-12 mb-4">
+    <div class="card stock-card stock-update-card">
+      <div class="card-header card-header-custom text-white">
+        <h5 class="mb-0"><i class="fa fa-boxes me-2"></i>Update Stock</h5>
+      </div>
+      <div class="card-body p-4">
+        <form id="stock-form">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="fa fa-tag me-1"></i>1) Product Type
+            </label>
+            <select class="form-select" name="product_type" id="product_type" required>
+              <option value="">-- Select Product Type --</option>
+              <option value="Finished">Finished</option>
+              <option value="Packing">Packing</option>
+              <option value="Raw">Raw</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="fa fa-layer-group me-1"></i>2) Product Category
+            </label>
+            <select class="form-select" name="category" id="category">
+              <option value="">-- Select Category --</option>
+              {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="fa fa-box me-1"></i>3) Exact Product
+            </label>
+            <select class="form-select" name="product" id="product" required>
+              <option value="">-- Select Product --</option>
+              {% for p in products %}
+                <option value="{{ p.id }}" data-category="{{ p.category_id }}">
+                  {{ p.code }} - {{ p.name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label d-block">
+              <i class="fa fa-exchange-alt me-1"></i>4) Transaction Type
+            </label>
+            <div class="btn-group-custom">
+              <button type="button"
+                      class="toggle-btn stock-in active"
+                      data-type="1">
+                <i class="fa fa-arrow-down me-1"></i> Stock In
+              </button>
+              <button type="button"
+                      class="toggle-btn stock-out"
+                      data-type="2">
+                <i class="fa fa-arrow-up me-1"></i> Stock Out
+              </button>
+            </div>
+            <input type="hidden" name="type" id="stock_type" value="1">
+          </div>
+
+          <div class="mb-3" id="reason-container">
+            <label class="form-label">
+              <i class="fa fa-clipboard-list me-1"></i>5) Reason
+              <span class="reason-indicator in" id="reason-badge">Stock In</span>
+            </label>
+            <select class="form-select fade-slide-in" name="reason" id="reason" required>
+              <option value="">-- Select Reason --</option>
+              <optgroup label="Stock In Reasons" id="reason-in">
+                <option value="Production">Production</option>
+                <option value="GRN (Raw)">GRN (Raw)</option>
+                <option value="Return">Return</option>
+              </optgroup>
+              <optgroup label="Stock Out Reasons" id="reason-out" style="display:none;">
+                <option value="Daily Invoice Dispatch">Daily Invoice Dispatch</option>
+                <option value="Stock Release">Stock Release</option>
+                <option value="Sample Dispatching">Sample Dispatching</option>
+                <option value="Third Party Suppliers">Third Party Suppliers</option>
+                <option value="Wastage">Wastage</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">
+              <i class="fa fa-calculator me-1"></i>6) Quantity
+            </label>
+            <input type="number"
+                   step="0.01"
+                   min="0"
+                   class="form-control"
+                   name="quantity"
+                   id="quantity"
+                   placeholder="Enter quantity"
+                   required>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label d-block">
+              <i class="fa fa-balance-scale me-1"></i>7) Unit of Measurement
+            </label>
+            <div class="btn-group-custom">
+              <button type="button"
+                      class="toggle-btn unit-btn active"
+                      data-unit="kg">
+                Kg
+              </button>
+              <button type="button"
+                      class="toggle-btn unit-btn"
+                      data-unit="pkt">
+                PKT
+              </button>
+              <button type="button"
+                      class="toggle-btn unit-btn"
+                      data-unit="reel">
+                Reel
+              </button>
+            </div>
+            <input type="hidden" name="unit" id="unit" value="kg">
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary submit-btn text-white">
+              <i class="fa fa-save me-2"></i>Submit Transaction
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 col-md-5 col-sm-12">
+    <div class="card stock-card stock-level-card">
+      <div class="card-header stock-level-header">
+        <h5 class="mb-0">
+          <i class="fa fa-list-ul me-2"></i>Current Stock Levels
+        </h5>
+      </div>
+
+      <div class="card-body p-4">
+        <div class="table-responsive">
+          <table class="table table-custom table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th class="text-center stock-col-sm">#</th>
+                <th>Product</th>
+                <th class="text-center stock-col-md">Available</th>
+                <th class="text-center stock-col-lg">Product Type</th>
+                <th class="text-center stock-col-md">Unit</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for p in products %}
+              {% with latest_stock=p.stock_set.last %}
+              <tr>
+                <td class="text-center fw-bold text-muted">{{ forloop.counter }}</td>
+
+                <td>
+                  <div class="fw-semibold">{{ p.code }}</div>
+                  <small class="text-muted">{{ p.name }}</small>
+                </td>
+
+                <td class="text-center">
+                  <span class="badge stock-badge-neutral">
+                    {{ p.count_inventory }}
+                  </span>
+                </td>
+
+                <td class="text-center">
+                  {% if latest_stock and latest_stock.product_type %}
+                    <span class="badge stock-badge-type">
+                      {{ latest_stock.product_type }}
+                    </span>
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+
+                <td class="text-center">
+                  {% if latest_stock and latest_stock.unit %}
+                    <span class="badge stock-badge-unit">
+                      {{ latest_stock.unit }}
+                    </span>
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endwith %}
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock pageContent %}
+
+{% block ScriptBlock %}
+<script>
+  $(function () {
+    const $productSelect = $('#product');
+    const allProductOptions = $productSelect.find('option').clone();
+
+    $('#category').on('change', function () {
+      const catId = $(this).val();
+      $productSelect.empty();
+      $productSelect.append('<option value="">-- Select Product --</option>');
+
+      allProductOptions.each(function () {
+        const optCat = $(this).data('category');
+        if (!catId || !optCat || String(optCat) === String(catId)) {
+          $productSelect.append($(this).clone());
+        }
+      });
+    });
+
+    $('.toggle-btn.stock-in, .toggle-btn.stock-out').on('click', function () {
+      $('.toggle-btn.stock-in, .toggle-btn.stock-out').removeClass('active');
+      $(this).addClass('active');
+
+      const type = $(this).data('type');
+      $('#stock_type').val(type);
+
+      const $reasonSelect = $('#reason');
+      const $reasonBadge = $('#reason-badge');
+
+      if (type === 1 || type === '1') {
+        $('#reason-in').show();
+        $('#reason-out').hide();
+        $reasonBadge.removeClass('out').addClass('in').text('Stock In');
+        $reasonSelect.val($('#reason-in option:first').val());
+      } else {
+        $('#reason-in').hide();
+        $('#reason-out').show();
+        $reasonBadge.removeClass('in').addClass('out').text('Stock Out');
+        $reasonSelect.val($('#reason-out option:first').val());
+      }
+
+      $reasonSelect.removeClass('fade-slide-in');
+      setTimeout(() => $reasonSelect.addClass('fade-slide-in'), 10);
+    });
+
+    $('.unit-btn').on('click', function () {
+      $('.unit-btn').removeClass('active');
+      $(this).addClass('active');
+      $('#unit').val($(this).data('unit'));
+    });
+
+    $('.quick-in, .quick-out').on('click', function () {
+      const productId = $(this).data('product');
+      $('#product').val(productId).trigger('change');
+
+      if ($(this).hasClass('quick-in')) {
+        $('.toggle-btn[data-type="1"]').click();
+      } else {
+        $('.toggle-btn[data-type="2"]').click();
+      }
+
+      $('html, body').animate({ scrollTop: $('#stock-form').offset().top - 100 }, 600);
+    });
+
+    $('#stock-form').on('submit', function (e) {
+      e.preventDefault();
+
+      const _this = $(this);
+      $('.err-msg').remove();
+
+      if (this.checkValidity() === false) {
+        this.reportValidity();
+        return;
+      }
+
+      const el = $('<div>')
+        .addClass('alert alert-danger err-msg stock-form-error')
+        .hide();
+
+      start_loader();
+
+      $.ajax({
+        url: '{% url "save-stock" %}',
+        method: 'POST',
+        data: new FormData(this),
+        cache: false,
+        contentType: false,
+        processData: false,
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        dataType: 'json',
+        error: function (err) {
+          console.log(err);
+          el.text('An error occurred. Please try again.');
+          _this.prepend(el);
+          el.show('slow');
+          end_loader();
+        },
+        success: function (resp) {
+          if (resp.status === 'success') {
+            location.reload();
+          } else {
+            el.html(resp.msg || 'An error occurred. Please try again.');
+            _this.prepend(el);
+            el.show('slow');
+          }
+          end_loader();
+        }
+      });
+    });
+
+    $('#reason-in').show();
+    $('#reason-out').hide();
+  });
+</script>
+{% endblock ScriptBlock %}
